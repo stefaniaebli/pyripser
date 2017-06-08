@@ -1,5 +1,4 @@
 import numpy as np
-from scipy.spatial import distance_matrix
 import subprocess
 from tempfile import mktemp
 from os import remove
@@ -57,6 +56,7 @@ def execute_and_parse(matrix_filename, ord_max=2, ripser_pathname='/home/stefani
 
 
 if __name__ == '__main__':
+	from scipy.spatial import distance_matrix
 	n_points = 100
 	dim = 5
 	matrix_filename = '/home/stefania/ripser/examples/random_50.txt'
