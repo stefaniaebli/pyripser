@@ -16,11 +16,11 @@ import subprocess
 from tempfile import mktemp
 from os import remove
 
-RIPSER_PATHNAME = '/home/ele/local/src/ripser/ripser'
+RIPSER_PATHNAME = '/home/stefania/ripser/ripser'
 
 
 def ripser(dm, ord_max=2, ripser_pathname=RIPSER_PATHNAME,
-           ripser_format='distance'):
+           ripser_format='distance', verbose=True):
     """Higher-level wrapper of ripser that compute the births and deaths
     of homology classes of Vietoris-Rips complexes up to the desired
     order for a given (Numpy) distance matrix (dm).
@@ -31,14 +31,16 @@ def ripser(dm, ord_max=2, ripser_pathname=RIPSER_PATHNAME,
     result = execute_and_parse(matrix_filename=matrix_filename,
                                ord_max=ord_max,
                                ripser_pathname=ripser_pathname,
-                               ripser_format=ripser_format)
+                               ripser_format=ripser_format,
+                               verbose=verbose)
     remove(matrix_filename)
     return result
 
 
 def execute_and_parse(matrix_filename, ord_max=2,
                       ripser_pathname=RIPSER_PATHNAME,
-                      ripser_format='distance'):
+                      ripser_format='distance',
+                      verbose=True):
     """Lower-level wrapper of ripser, which operates on a txt matrix saved
     on file.
     """
@@ -53,7 +55,9 @@ def execute_and_parse(matrix_filename, ord_max=2,
     # Print output on screen and keep a copy in variable 'output':
     output = ''
     for line in proc.stdout:
-        print(line[:-1])
+        if verbose:
+            print(line[:-1])
+
         output += line
 
     proc.wait()
@@ -99,4 +103,4 @@ if __name__ == '__main__':
     ord_max = 2
     X = np.random.uniform(size=(n_points, dim))
     dm = distance_matrix(X, X)
-    result = ripser(dm, ord_max=ord_max)
+    result = ripser(dm, ord_max=ord_max, verbose=False)
