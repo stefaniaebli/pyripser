@@ -16,7 +16,7 @@ import subprocess
 from tempfile import mktemp
 from os import remove
 
-RIPSER_PATHNAME = '/home/stefania/ripser/ripser'
+RIPSER_PATHNAME = './ripser'
 
 
 def ripser(dm, ord_max=2, ripser_pathname=RIPSER_PATHNAME,
