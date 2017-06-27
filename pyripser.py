@@ -20,12 +20,13 @@ RIPSER_PATHNAME = '/home/stefania/ripser/ripser'
 
 
 def ripser(dm, ord_max=2, ripser_pathname=RIPSER_PATHNAME,
-           ripser_format='distance', verbose=True):
+           ripser_format='distance', verbose=False):
     """Higher-level wrapper of ripser that compute the births and deaths
     of homology classes of Vietoris-Rips complexes up to the desired
     order for a given (Numpy) distance matrix (dm).
 
     """
+
     matrix_filename = mktemp()
     np.savetxt(matrix_filename, dm, delimiter=' ')
     result = execute_and_parse(matrix_filename=matrix_filename,
@@ -51,7 +52,7 @@ def execute_and_parse(matrix_filename, ord_max=2,
     print("Executing: %s" % " ".join(command))
     proc = subprocess.Popen(command,
                             stdout=subprocess.PIPE,
-                            stderr=subprocess.STDOUT)
+                            stderr=subprocess.PIPE)
     # Print output on screen and keep a copy in variable 'output':
     output = ''
     for line in proc.stdout:
@@ -61,6 +62,14 @@ def execute_and_parse(matrix_filename, ord_max=2,
         output += line
 
     proc.wait()
+
+    error = False
+    for line in proc.stderr:
+        print(line)
+        error = True
+
+    if error:
+        raise Exception
 
     # Parse output:
     print("")
@@ -98,9 +107,9 @@ def execute_and_parse(matrix_filename, ord_max=2,
 
 if __name__ == '__main__':
     from scipy.spatial import distance_matrix
-    n_points = 100
-    dim = 5
-    ord_max = 2
+    n_points = 10
+    dim = 2
+    ord_max = 1
     X = np.random.uniform(size=(n_points, dim))
     dm = distance_matrix(X, X)
-    result = ripser(dm, ord_max=ord_max, verbose=False)
+    result = ripser(dm, ord_max=ord_max, verbose=True)
